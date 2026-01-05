@@ -44,9 +44,14 @@ export default function Dashboard() {
       {sessions.length === 0 ? (
         <div className="card text-center py-12">
           <p className="text-gray-500 mb-4">No sessions recorded yet.</p>
-          <Link to="/add" className="btn-primary">
-            Add Your First Session
-          </Link>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link to="/add" className="btn-primary">
+              Add Your First Session
+            </Link>
+            <Link to="/import" className="btn-secondary">
+              Import from Spreadsheet
+            </Link>
+          </div>
         </div>
       ) : (
         <>

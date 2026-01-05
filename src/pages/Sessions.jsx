@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useSessions } from '../hooks/useSessions';
 import SessionForm from '../components/SessionForm';
 import { format } from 'date-fns';
@@ -71,7 +72,12 @@ export default function Sessions() {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-800">Sessions</h2>
-        <span className="text-gray-500">{filteredSessions.length} sessions</span>
+        <div className="flex items-center gap-4">
+          <span className="text-gray-500">{filteredSessions.length} sessions</span>
+          <Link to="/import" className="text-primary-600 text-sm hover:underline">
+            Import
+          </Link>
+        </div>
       </div>
 
       {/* Filter Tabs */}

@@ -6,6 +6,7 @@ import AddSession from './pages/AddSession';
 import Sessions from './pages/Sessions';
 import Stats from './pages/Stats';
 import Login from './pages/Login';
+import ImportSessions from './pages/ImportSessions';
 
 // Protected route wrapper
 function ProtectedRoute({ children }) {
@@ -92,6 +93,16 @@ function AppRoutes() {
           <ProtectedRoute>
             <Layout>
               <Stats />
+            </Layout>
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/import"
+        element={
+          <ProtectedRoute>
+            <Layout>
+              <ImportSessions />
             </Layout>
           </ProtectedRoute>
         }
