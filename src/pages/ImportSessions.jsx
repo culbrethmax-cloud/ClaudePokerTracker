@@ -15,15 +15,19 @@ export default function ImportSessions() {
   const parseCSV = (text) => {
     const lines = text.trim().split('\n');
     if (lines.length < 2) {
-      throw new Error('CSV must have a header row and at least one data row');
+      throw new Error('Must have a header row and at least one data row');
     }
 
+    // Detect delimiter: tab (from Google Sheets copy) or comma (from CSV file)
+    const firstLine = lines[0];
+    const delimiter = firstLine.includes('\t') ? '\t' : ',';
+
     // Parse header
-    const header = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const header = firstLine.split(delimiter).map(h => h.trim().toLowerCase());
 
     // Find column indexes
     const dateIdx = header.findIndex(h => h.includes('date'));
-    const gameTypeIdx = header.findIndex(h => h.includes('gametype') || h.includes('game type'));
+    const gameTypeIdx = header.findIndex(h => h.includes('gametype') || h.includes('game type') || h.includes('game'));
     const hoursIdx = header.findIndex(h => h.includes('hour') || h.includes('length'));
     const handsIdx = header.findIndex(h => h.includes('hand'));
     const stakesIdx = header.findIndex(h => h.includes('stake'));
@@ -40,8 +44,8 @@ export default function ImportSessions() {
       const line = lines[i].trim();
       if (!line) continue;
 
-      // Handle CSV parsing (simple - assumes no commas in values)
-      const values = line.split(',').map(v => v.trim());
+      // Split by detected delimiter
+      const values = line.split(delimiter).map(v => v.trim());
 
       const date = values[dateIdx];
       const gameType = gameTypeIdx !== -1 ? values[gameTypeIdx] : 'NLHE';
