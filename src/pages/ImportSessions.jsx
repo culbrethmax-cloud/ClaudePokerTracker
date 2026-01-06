@@ -57,18 +57,37 @@ export default function ImportSessions() {
         continue;
       }
 
-      sessions.push({
-        type: 'cash',
-        date: date,
-        gameType: gameType,
-        duration: Math.round(hours * 60), // Convert hours to minutes
-        hands: hands,
-        stakes: stakes,
-        profitBB: resultBB,
-        profitDollars: resultCash !== null ? resultCash : calculateDollars(resultBB, stakes),
-        location: '',
-        notes: ''
-      });
+      // Check if this is a tournament (MTT)
+      const isTournament = gameType.toUpperCase().includes('MTT');
+
+      if (isTournament) {
+        // Tournament session
+        const profit = resultCash !== null ? resultCash : 0;
+        sessions.push({
+          type: 'tournament',
+          date: date,
+          gameType: 'MTT',
+          duration: Math.round(hours * 60),
+          buyIn: 0, // Unknown - can be edited later
+          cashOut: profit, // Store profit as cashOut since buyIn is 0
+          location: '',
+          notes: 'Imported - buy-in not recorded'
+        });
+      } else {
+        // Cash game session
+        sessions.push({
+          type: 'cash',
+          date: date,
+          gameType: gameType,
+          duration: Math.round(hours * 60),
+          hands: hands,
+          stakes: stakes,
+          profitBB: resultBB,
+          profitDollars: resultCash !== null ? resultCash : calculateDollars(resultBB, stakes),
+          location: '',
+          notes: ''
+        });
+      }
     }
 
     return sessions;
@@ -175,6 +194,9 @@ export default function ImportSessions() {
 
           <div className="bg-green-50 text-green-800 p-4 rounded-lg mb-4">
             Found <strong>{parsedSessions.length}</strong> sessions to import
+            <span className="text-green-600 text-sm ml-2">
+              ({parsedSessions.filter(s => s.type === 'cash').length} cash, {parsedSessions.filter(s => s.type === 'tournament').length} tournaments)
+            </span>
           </div>
 
           {/* Preview Table */}
@@ -182,27 +204,38 @@ export default function ImportSessions() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-gray-500 border-b">
+                  <th className="pb-2 pr-4">Type</th>
                   <th className="pb-2 pr-4">Date</th>
-                  <th className="pb-2 pr-4">Stakes</th>
-                  <th className="pb-2 pr-4">Hands</th>
-                  <th className="pb-2 pr-4">Result (BB)</th>
+                  <th className="pb-2 pr-4">Stakes/Game</th>
                   <th className="pb-2">Result ($)</th>
                 </tr>
               </thead>
               <tbody>
-                {parsedSessions.slice(0, 10).map((session, idx) => (
-                  <tr key={idx} className="border-b border-gray-100">
-                    <td className="py-2 pr-4">{session.date}</td>
-                    <td className="py-2 pr-4">{session.stakes}</td>
-                    <td className="py-2 pr-4">{session.hands}</td>
-                    <td className={`py-2 pr-4 ${session.profitBB >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {session.profitBB >= 0 ? '+' : ''}{session.profitBB.toFixed(1)}
-                    </td>
-                    <td className={`py-2 ${session.profitDollars >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                      {formatDollars(session.profitDollars)}
-                    </td>
-                  </tr>
-                ))}
+                {parsedSessions.slice(0, 10).map((session, idx) => {
+                  const profit = session.type === 'cash'
+                    ? session.profitDollars
+                    : session.cashOut; // cashOut holds profit for imported tournaments
+                  return (
+                    <tr key={idx} className="border-b border-gray-100">
+                      <td className="py-2 pr-4">
+                        <span className={`text-xs px-2 py-0.5 rounded ${
+                          session.type === 'cash'
+                            ? 'bg-blue-100 text-blue-700'
+                            : 'bg-purple-100 text-purple-700'
+                        }`}>
+                          {session.type === 'cash' ? 'Cash' : 'MTT'}
+                        </span>
+                      </td>
+                      <td className="py-2 pr-4">{session.date}</td>
+                      <td className="py-2 pr-4">
+                        {session.type === 'cash' ? session.stakes : 'Tournament'}
+                      </td>
+                      <td className={`py-2 ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                        {formatDollars(profit)}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
             {parsedSessions.length > 10 && (
