@@ -26,10 +26,10 @@ export default function AddSession() {
 
   return (
     <div className="max-w-lg mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Add Session</h2>
+      <h2 className="text-2xl font-bold text-gray-100 mb-6">Add Session</h2>
 
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4">
+        <div className="bg-red-900/50 text-red-400 p-3 rounded-lg mb-4">
           {error}
         </div>
       )}
@@ -40,7 +40,7 @@ export default function AddSession() {
 
       {isSubmitting && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-          <div className="bg-white p-4 rounded-lg">
+          <div className="bg-gray-800 text-gray-100 p-4 rounded-lg">
             Saving...
           </div>
         </div>

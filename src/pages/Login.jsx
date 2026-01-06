@@ -20,24 +20,24 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-[#2D2D2D] flex items-center justify-center px-4">
       <div className="max-w-md w-full">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-primary-600 mb-2">
+          <h1 className="text-4xl font-bold text-primary-400 mb-2">
             Poker Tracker
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-400">
             Track your poker sessions across all your devices
           </p>
         </div>
 
         <div className="card">
-          <h2 className="text-xl font-semibold text-center mb-6">
+          <h2 className="text-xl font-semibold text-center mb-6 text-gray-100">
             Sign In to Continue
           </h2>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
+            <div className="bg-red-900/50 text-red-400 p-3 rounded-lg mb-4 text-sm">
               {error}
             </div>
           )}
@@ -45,7 +45,7 @@ export default function Login() {
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 bg-white border border-gray-300 rounded-lg px-4 py-3 text-gray-700 font-medium hover:bg-gray-50 transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 text-gray-100 font-medium hover:bg-gray-600 transition-colors disabled:opacity-50"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -73,8 +73,8 @@ export default function Login() {
           </p>
         </div>
 
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <h3 className="font-medium mb-2">Features:</h3>
+        <div className="mt-8 text-center text-sm text-gray-400">
+          <h3 className="font-medium mb-2 text-gray-300">Features:</h3>
           <ul className="space-y-1">
             <li>Track cash games and tournaments</li>
             <li>View BB/100, hourly rate, ROI</li>

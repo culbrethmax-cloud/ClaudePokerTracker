@@ -13,19 +13,19 @@ export default function Layout({ children }) {
   const { user, signOut } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-[#2D2D2D]">
       {/* Top Header */}
-      <header className="bg-white shadow-sm">
+      <header className="bg-gray-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-primary-600">Poker Tracker</h1>
+          <h1 className="text-xl font-bold text-primary-400">Poker Tracker</h1>
           {user && (
             <div className="flex items-center gap-3">
-              <span className="text-sm text-gray-600 hidden sm:inline">
+              <span className="text-sm text-gray-400 hidden sm:inline">
                 {user.email}
               </span>
               <button
                 onClick={signOut}
-                className="text-sm text-gray-500 hover:text-gray-700"
+                className="text-sm text-gray-400 hover:text-gray-200"
               >
                 Sign Out
               </button>
@@ -40,7 +40,7 @@ export default function Layout({ children }) {
       </main>
 
       {/* Bottom Navigation (Mobile-friendly) */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg">
+      <nav className="fixed bottom-0 left-0 right-0 bg-gray-800 border-t border-gray-700 shadow-lg">
         <div className="max-w-7xl mx-auto px-4">
           <div className="flex justify-around">
             {navItems.map(item => (
@@ -49,8 +49,8 @@ export default function Layout({ children }) {
                 to={item.path}
                 className={`flex flex-col items-center py-3 px-4 text-sm transition-colors ${
                   location.pathname === item.path
-                    ? 'text-primary-600'
-                    : 'text-gray-500 hover:text-gray-700'
+                    ? 'text-primary-400'
+                    : 'text-gray-400 hover:text-gray-200'
                 }`}
               >
                 <span className="text-xl mb-1">{item.icon}</span>

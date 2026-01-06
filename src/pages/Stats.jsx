@@ -20,7 +20,7 @@ export default function Stats() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-400">Loading...</div>
       </div>
     );
   }
@@ -40,7 +40,7 @@ export default function Stats() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-gray-800">Statistics</h2>
+      <h2 className="text-2xl font-bold text-gray-100">Statistics</h2>
 
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2">
@@ -51,7 +51,7 @@ export default function Stats() {
             className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-colors ${
               activeTab === tab.id
                 ? 'bg-primary-600 text-white'
-                : 'bg-gray-200 text-gray-600 hover:bg-gray-300'
+                : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
             }`}
           >
             {tab.label}
@@ -70,10 +70,10 @@ export default function Stats() {
             <>
               {/* Summary Stats */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Cash Game Summary</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Cash Game Summary</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
-                    <p className="text-sm text-gray-500">Total Profit</p>
+                    <p className="text-sm text-gray-400">Total Profit</p>
                     <p className={`text-2xl font-bold ${cashStats.totalProfitDollars >= 0 ? 'profit-text' : 'loss-text'}`}>
                       {formatCurrency(cashStats.totalProfitDollars)}
                     </p>
@@ -82,7 +82,7 @@ export default function Stats() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">BB/100 Hands</p>
+                    <p className="text-sm text-gray-400">BB/100 Hands</p>
                     <p className={`text-2xl font-bold ${cashStats.bbPer100 >= 0 ? 'profit-text' : 'loss-text'}`}>
                       {cashStats.bbPer100.toFixed(2)}
                     </p>
@@ -91,7 +91,7 @@ export default function Stats() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Hourly Rate</p>
+                    <p className="text-sm text-gray-400">Hourly Rate</p>
                     <p className={`text-2xl font-bold ${cashStats.hourlyRateDollars >= 0 ? 'profit-text' : 'loss-text'}`}>
                       {formatCurrency(cashStats.hourlyRateDollars)}/hr
                     </p>
@@ -100,7 +100,7 @@ export default function Stats() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Volume</p>
+                    <p className="text-sm text-gray-400">Volume</p>
                     <p className="text-2xl font-bold">{cashStats.sessionsPlayed}</p>
                     <p className="text-sm text-gray-400">
                       {formatDuration(cashStats.totalMinutes)}
@@ -119,7 +119,7 @@ export default function Stats() {
                       className={`px-3 py-1 text-sm rounded ${
                         chartMode === 'dollars'
                           ? 'bg-primary-600 text-white'
-                          : 'bg-gray-200 text-gray-600'
+                          : 'bg-gray-700 text-gray-300'
                       }`}
                     >
                       $
@@ -129,7 +129,7 @@ export default function Stats() {
                       className={`px-3 py-1 text-sm rounded ${
                         chartMode === 'bb'
                           ? 'bg-primary-600 text-white'
-                          : 'bg-gray-200 text-gray-600'
+                          : 'bg-gray-700 text-gray-300'
                       }`}
                     >
                       BB
@@ -141,14 +141,14 @@ export default function Stats() {
 
               {/* Results by Stakes */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Results by Stakes</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Results by Stakes</h3>
                 <StakesChart data={statsByStakes} />
 
                 {/* Stakes Table */}
                 <div className="mt-6 overflow-x-auto">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="text-left text-gray-500 border-b">
+                      <tr className="text-left text-gray-400 border-b border-gray-600">
                         <th className="pb-2">Stakes</th>
                         <th className="pb-2">Sessions</th>
                         <th className="pb-2">Profit ($)</th>
@@ -159,7 +159,7 @@ export default function Stats() {
                     </thead>
                     <tbody>
                       {statsByStakes.map(stake => (
-                        <tr key={stake.stakes} className="border-b border-gray-100">
+                        <tr key={stake.stakes} className="border-b border-gray-700">
                           <td className="py-2 font-medium">{stake.stakes}</td>
                           <td className="py-2">{stake.sessionsCount}</td>
                           <td className={`py-2 ${stake.totalDollars >= 0 ? 'profit-text' : 'loss-text'}`}>
@@ -183,7 +183,7 @@ export default function Stats() {
 
               {/* BB/100 by Stakes Chart */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">BB/100 by Stakes</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">BB/100 by Stakes</h3>
                 <BBPer100Chart data={statsByStakes} />
               </div>
             </>
@@ -202,28 +202,28 @@ export default function Stats() {
             <>
               {/* Summary Stats */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Tournament Summary</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Tournament Summary</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
-                    <p className="text-sm text-gray-500">Total Profit</p>
+                    <p className="text-sm text-gray-400">Total Profit</p>
                     <p className={`text-2xl font-bold ${tournamentStats.totalProfit >= 0 ? 'profit-text' : 'loss-text'}`}>
                       {formatCurrency(tournamentStats.totalProfit)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">ROI</p>
+                    <p className="text-sm text-gray-400">ROI</p>
                     <p className={`text-2xl font-bold ${tournamentStats.roi >= 0 ? 'profit-text' : 'loss-text'}`}>
                       {formatPercent(tournamentStats.roi)}
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">ITM %</p>
+                    <p className="text-sm text-gray-400">ITM %</p>
                     <p className="text-2xl font-bold">
                       {tournamentStats.itmPercent.toFixed(1)}%
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Tournaments</p>
+                    <p className="text-sm text-gray-400">Tournaments</p>
                     <p className="text-2xl font-bold">{tournamentStats.tournamentsPlayed}</p>
                     <p className="text-sm text-gray-400">
                       Avg ${tournamentStats.avgBuyIn.toFixed(0)} buy-in
@@ -234,20 +234,20 @@ export default function Stats() {
 
               {/* Profit Over Time */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Tournament Profit Over Time</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Tournament Profit Over Time</h3>
                 <ProfitChart data={tournamentProfitData} />
               </div>
 
               {/* Additional Tournament Stats */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Tournament Details</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Tournament Details</h3>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500">Total Buy-ins</p>
+                  <div className="p-4 bg-gray-700 rounded-lg">
+                    <p className="text-sm text-gray-400">Total Buy-ins</p>
                     <p className="text-xl font-bold">${tournamentStats.totalBuyIns.toFixed(2)}</p>
                   </div>
-                  <div className="p-4 bg-gray-50 rounded-lg">
-                    <p className="text-sm text-gray-500">Total Cash-outs</p>
+                  <div className="p-4 bg-gray-700 rounded-lg">
+                    <p className="text-sm text-gray-400">Total Cash-outs</p>
                     <p className="text-xl font-bold">${tournamentStats.totalCashOuts.toFixed(2)}</p>
                   </div>
                 </div>
@@ -268,10 +268,10 @@ export default function Stats() {
             <>
               {/* Combined Stats */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Overall Summary</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Overall Summary</h3>
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
                   <div>
-                    <p className="text-sm text-gray-500">Total Profit</p>
+                    <p className="text-sm text-gray-400">Total Profit</p>
                     <p className={`text-2xl font-bold ${
                       (cashStats.totalProfitDollars + tournamentStats.totalProfit) >= 0
                         ? 'profit-text'
@@ -281,11 +281,11 @@ export default function Stats() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Total Sessions</p>
+                    <p className="text-sm text-gray-400">Total Sessions</p>
                     <p className="text-2xl font-bold">{sessions.length}</p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">Total Time</p>
+                    <p className="text-sm text-gray-400">Total Time</p>
                     <p className="text-2xl font-bold">
                       {formatDuration(
                         sessions.reduce((sum, s) => sum + (s.duration || 0), 0)
@@ -297,14 +297,14 @@ export default function Stats() {
 
               {/* Combined Profit Chart */}
               <div className="card">
-                <h3 className="text-lg font-semibold mb-4">Combined Profit Over Time</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-100">Combined Profit Over Time</h3>
                 <ProfitChart data={allProfitData} />
               </div>
 
               {/* Breakdown */}
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="card">
-                  <h3 className="text-lg font-semibold mb-4">Cash Games</h3>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-100">Cash Games</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Sessions</span>
@@ -326,7 +326,7 @@ export default function Stats() {
                 </div>
 
                 <div className="card">
-                  <h3 className="text-lg font-semibold mb-4">Tournaments</h3>
+                  <h3 className="text-lg font-semibold mb-4 text-gray-100">Tournaments</h3>
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-gray-500">Tournaments</span>

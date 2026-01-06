@@ -85,14 +85,14 @@ export default function SessionForm({ onSubmit, initialData = null, isEditing = 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Session Type Toggle */}
-      <div className="flex rounded-lg bg-gray-200 p-1">
+      <div className="flex rounded-lg bg-gray-700 p-1">
         <button
           type="button"
           onClick={() => setSessionType('cash')}
           className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
             sessionType === 'cash'
-              ? 'bg-white shadow text-primary-600'
-              : 'text-gray-600 hover:text-gray-800'
+              ? 'bg-gray-600 shadow text-primary-400'
+              : 'text-gray-400 hover:text-gray-200'
           }`}
         >
           Cash Game
@@ -102,8 +102,8 @@ export default function SessionForm({ onSubmit, initialData = null, isEditing = 
           onClick={() => setSessionType('tournament')}
           className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
             sessionType === 'tournament'
-              ? 'bg-white shadow text-primary-600'
-              : 'text-gray-600 hover:text-gray-800'
+              ? 'bg-gray-600 shadow text-primary-400'
+              : 'text-gray-400 hover:text-gray-200'
           }`}
         >
           Tournament

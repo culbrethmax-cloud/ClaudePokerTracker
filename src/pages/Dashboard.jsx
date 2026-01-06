@@ -19,7 +19,7 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">Loading...</div>
+        <div className="text-gray-400">Loading...</div>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function Dashboard() {
     <div className="space-y-6">
       {/* Welcome / Quick Add */}
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-800">Dashboard</h2>
+        <h2 className="text-2xl font-bold text-gray-100">Dashboard</h2>
         <Link to="/add" className="btn-primary">
           + Add Session
         </Link>
@@ -43,7 +43,7 @@ export default function Dashboard() {
 
       {sessions.length === 0 ? (
         <div className="card text-center py-12">
-          <p className="text-gray-500 mb-4">No sessions recorded yet.</p>
+          <p className="text-gray-400 mb-4">No sessions recorded yet.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link to="/add" className="btn-primary">
               Add Your First Session
@@ -81,10 +81,10 @@ export default function Dashboard() {
           {/* Cash Game Stats */}
           {cashStats.sessionsPlayed > 0 && (
             <div className="card">
-              <h3 className="text-lg font-semibold mb-4">Cash Game Overview</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-100">Cash Game Overview</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">Total Profit</p>
+                  <p className="text-sm text-gray-400">Total Profit</p>
                   <p className={`text-xl font-bold ${cashStats.totalProfitDollars >= 0 ? 'profit-text' : 'loss-text'}`}>
                     {formatCurrency(cashStats.totalProfitDollars)}
                   </p>
@@ -93,25 +93,25 @@ export default function Dashboard() {
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">BB/100</p>
+                  <p className="text-sm text-gray-400">BB/100</p>
                   <p className={`text-xl font-bold ${cashStats.bbPer100 >= 0 ? 'profit-text' : 'loss-text'}`}>
                     {cashStats.bbPer100.toFixed(2)}
                   </p>
-                  <p className="text-sm text-gray-400">{cashStats.totalHands.toLocaleString()} hands</p>
+                  <p className="text-sm text-gray-500">{cashStats.totalHands.toLocaleString()} hands</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Hourly Rate</p>
+                  <p className="text-sm text-gray-400">Hourly Rate</p>
                   <p className={`text-xl font-bold ${cashStats.hourlyRateDollars >= 0 ? 'profit-text' : 'loss-text'}`}>
                     {formatCurrency(cashStats.hourlyRateDollars)}/hr
                   </p>
-                  <p className="text-sm text-gray-400">{formatDuration(cashStats.totalMinutes)} played</p>
+                  <p className="text-sm text-gray-500">{formatDuration(cashStats.totalMinutes)} played</p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Win Rate</p>
-                  <p className="text-xl font-bold">
+                  <p className="text-sm text-gray-400">Win Rate</p>
+                  <p className="text-xl font-bold text-gray-100">
                     {cashStats.winningSessionsPercent.toFixed(0)}%
                   </p>
-                  <p className="text-sm text-gray-400">winning sessions</p>
+                  <p className="text-sm text-gray-500">winning sessions</p>
                 </div>
               </div>
             </div>
@@ -120,29 +120,29 @@ export default function Dashboard() {
           {/* Tournament Stats */}
           {tournamentStats.tournamentsPlayed > 0 && (
             <div className="card">
-              <h3 className="text-lg font-semibold mb-4">Tournament Overview</h3>
+              <h3 className="text-lg font-semibold mb-4 text-gray-100">Tournament Overview</h3>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <p className="text-sm text-gray-500">Total Profit</p>
+                  <p className="text-sm text-gray-400">Total Profit</p>
                   <p className={`text-xl font-bold ${tournamentStats.totalProfit >= 0 ? 'profit-text' : 'loss-text'}`}>
                     {formatCurrency(tournamentStats.totalProfit)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">ROI</p>
+                  <p className="text-sm text-gray-400">ROI</p>
                   <p className={`text-xl font-bold ${tournamentStats.roi >= 0 ? 'profit-text' : 'loss-text'}`}>
                     {formatPercent(tournamentStats.roi)}
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">ITM %</p>
-                  <p className="text-xl font-bold">
+                  <p className="text-sm text-gray-400">ITM %</p>
+                  <p className="text-xl font-bold text-gray-100">
                     {tournamentStats.itmPercent.toFixed(0)}%
                   </p>
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">Avg Buy-in</p>
-                  <p className="text-xl font-bold">
+                  <p className="text-sm text-gray-400">Avg Buy-in</p>
+                  <p className="text-xl font-bold text-gray-100">
                     ${tournamentStats.avgBuyIn.toFixed(0)}
                   </p>
                 </div>
@@ -152,15 +152,15 @@ export default function Dashboard() {
 
           {/* Profit Chart */}
           <div className="card">
-            <h3 className="text-lg font-semibold mb-4">Profit Over Time</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-100">Profit Over Time</h3>
             <ProfitChart data={profitData} />
           </div>
 
           {/* Recent Sessions */}
           <div className="card">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">Recent Sessions</h3>
-              <Link to="/sessions" className="text-primary-600 text-sm hover:underline">
+              <h3 className="text-lg font-semibold text-gray-100">Recent Sessions</h3>
+              <Link to="/sessions" className="text-primary-400 text-sm hover:underline">
                 View All
               </Link>
             </div>
@@ -168,16 +168,16 @@ export default function Dashboard() {
               {recentSessions.map(session => (
                 <div
                   key={session.id}
-                  className="flex justify-between items-center p-3 bg-gray-50 rounded-lg"
+                  className="flex justify-between items-center p-3 bg-gray-700 rounded-lg"
                 >
                   <div>
-                    <p className="font-medium">
+                    <p className="font-medium text-gray-100">
                       {session.type === 'cash' ? session.stakes : 'Tournament'}
                       <span className="text-gray-400 text-sm ml-2">
                         {session.gameType}
                       </span>
                     </p>
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-gray-400">
                       {format(new Date(session.date), 'MMM d, yyyy')}
                       {session.location && ` • ${session.location}`}
                     </p>

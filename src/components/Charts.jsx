@@ -40,7 +40,7 @@ export function ProfitChart({ data, showBB = false }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={formattedData} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" />
         <XAxis
           dataKey="dateFormatted"
           stroke="#9ca3af"
@@ -61,9 +61,10 @@ export function ProfitChart({ data, showBB = false }) {
           ]}
           labelFormatter={(label) => `Date: ${label}`}
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #e5e7eb',
-            borderRadius: '8px'
+            backgroundColor: '#374151',
+            border: '1px solid #4b5563',
+            borderRadius: '8px',
+            color: '#e5e7eb'
           }}
         />
         <Line
@@ -92,7 +93,7 @@ export function StakesChart({ data }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" />
         <XAxis
           dataKey="stakes"
           stroke="#9ca3af"
@@ -112,9 +113,10 @@ export function StakesChart({ data }) {
             return [value, name];
           }}
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #e5e7eb',
-            borderRadius: '8px'
+            backgroundColor: '#374151',
+            border: '1px solid #4b5563',
+            borderRadius: '8px',
+            color: '#e5e7eb'
           }}
         />
         <Bar dataKey="totalDollars" name="Profit">
@@ -143,7 +145,7 @@ export function BBPer100Chart({ data }) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={data} margin={{ top: 5, right: 20, left: 10, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+        <CartesianGrid strokeDasharray="3 3" stroke="#4b5563" />
         <XAxis
           dataKey="stakes"
           stroke="#9ca3af"
@@ -159,9 +161,10 @@ export function BBPer100Chart({ data }) {
         <Tooltip
           formatter={(value) => [`${value.toFixed(2)} BB/100`, 'Win Rate']}
           contentStyle={{
-            backgroundColor: 'white',
-            border: '1px solid #e5e7eb',
-            borderRadius: '8px'
+            backgroundColor: '#374151',
+            border: '1px solid #4b5563',
+            borderRadius: '8px',
+            color: '#e5e7eb'
           }}
         />
         <Bar dataKey="bbPer100" name="BB/100">

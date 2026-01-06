@@ -146,14 +146,14 @@ export default function ImportSessions() {
 
   return (
     <div className="max-w-4xl mx-auto">
-      <h2 className="text-2xl font-bold text-gray-800 mb-6">Import Sessions</h2>
+      <h2 className="text-2xl font-bold text-gray-100 mb-6">Import Sessions</h2>
 
       {/* Step 1: Paste CSV */}
       {step === 1 && (
         <div className="card">
           <h3 className="text-lg font-semibold mb-4">Step 1: Paste Your Data</h3>
 
-          <div className="bg-blue-50 text-blue-800 p-4 rounded-lg mb-4 text-sm">
+          <div className="bg-blue-900/50 text-blue-300 p-4 rounded-lg mb-4 text-sm">
             <p className="font-medium mb-2">How to export from Google Sheets:</p>
             <ol className="list-decimal list-inside space-y-1">
               <li>Open your Google Sheet</li>
@@ -163,7 +163,7 @@ export default function ImportSessions() {
             </ol>
           </div>
 
-          <p className="text-sm text-gray-600 mb-2">
+          <p className="text-sm text-gray-400 mb-2">
             Expected columns: Date, GameType, LengthHours, Hands, Stakes, ResultBB, ResultCash
           </p>
 
@@ -176,7 +176,7 @@ export default function ImportSessions() {
           />
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg mt-4">
+            <div className="bg-red-900/50 text-red-400 p-3 rounded-lg mt-4">
               {error}
             </div>
           )}
@@ -196,9 +196,9 @@ export default function ImportSessions() {
         <div className="card">
           <h3 className="text-lg font-semibold mb-4">Step 2: Preview & Confirm</h3>
 
-          <div className="bg-green-50 text-green-800 p-4 rounded-lg mb-4">
+          <div className="bg-green-900/50 text-green-300 p-4 rounded-lg mb-4">
             Found <strong>{parsedSessions.length}</strong> sessions to import
-            <span className="text-green-600 text-sm ml-2">
+            <span className="text-green-400 text-sm ml-2">
               ({parsedSessions.filter(s => s.type === 'cash').length} cash, {parsedSessions.filter(s => s.type === 'tournament').length} tournaments)
             </span>
           </div>
@@ -207,7 +207,7 @@ export default function ImportSessions() {
           <div className="overflow-x-auto mb-4">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-gray-500 border-b">
+                <tr className="text-left text-gray-400 border-b border-gray-600">
                   <th className="pb-2 pr-4">Type</th>
                   <th className="pb-2 pr-4">Date</th>
                   <th className="pb-2 pr-4">Stakes/Game</th>
@@ -220,7 +220,7 @@ export default function ImportSessions() {
                     ? session.profitDollars
                     : session.cashOut; // cashOut holds profit for imported tournaments
                   return (
-                    <tr key={idx} className="border-b border-gray-100">
+                    <tr key={idx} className="border-b border-gray-700">
                       <td className="py-2 pr-4">
                         <span className={`text-xs px-2 py-0.5 rounded ${
                           session.type === 'cash'
@@ -234,7 +234,7 @@ export default function ImportSessions() {
                       <td className="py-2 pr-4">
                         {session.type === 'cash' ? session.stakes : 'Tournament'}
                       </td>
-                      <td className={`py-2 ${profit >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      <td className={`py-2 ${profit >= 0 ? 'text-green-400' : 'text-red-400'}`}>
                         {formatDollars(profit)}
                       </td>
                     </tr>
@@ -243,25 +243,25 @@ export default function ImportSessions() {
               </tbody>
             </table>
             {parsedSessions.length > 10 && (
-              <p className="text-sm text-gray-500 mt-2">
+              <p className="text-sm text-gray-400 mt-2">
                 ... and {parsedSessions.length - 10} more sessions
               </p>
             )}
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4">
+            <div className="bg-red-900/50 text-red-400 p-3 rounded-lg mb-4">
               {error}
             </div>
           )}
 
           {importing && (
             <div className="mb-4">
-              <div className="flex justify-between text-sm text-gray-600 mb-1">
+              <div className="flex justify-between text-sm text-gray-400 mb-1">
                 <span>Importing...</span>
                 <span>{importProgress}%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="w-full bg-gray-700 rounded-full h-2">
                 <div
                   className="bg-primary-600 h-2 rounded-full transition-all"
                   style={{ width: `${importProgress}%` }}
@@ -294,7 +294,7 @@ export default function ImportSessions() {
         <div className="card text-center">
           <div className="text-5xl mb-4">✅</div>
           <h3 className="text-xl font-semibold mb-2">Import Complete!</h3>
-          <p className="text-gray-600 mb-6">
+          <p className="text-gray-400 mb-6">
             Successfully imported {parsedSessions.length} sessions
           </p>
           <button
