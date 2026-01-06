@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSessions } from '../hooks/useSessions';
 import { ProfitChart, StakesChart, BBPer100Chart } from '../components/Charts';
 import {
@@ -12,10 +12,83 @@ import {
   formatDuration
 } from '../utils/calculations';
 
+const DAYS_OF_WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
 export default function Stats() {
   const { sessions, loading } = useSessions();
-  const [activeTab, setActiveTab] = useState('cash'); // 'cash', 'tournament', 'overview'
-  const [chartMode, setChartMode] = useState('dollars'); // 'dollars', 'bb'
+  const [activeTab, setActiveTab] = useState('cash');
+  const [chartMode, setChartMode] = useState('dollars');
+
+  // Filter state
+  const [selectedStakes, setSelectedStakes] = useState('all');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [selectedDays, setSelectedDays] = useState([]);
+
+  // Get unique stakes from sessions
+  const availableStakes = useMemo(() => {
+    const stakes = new Set();
+    sessions.filter(s => s.type === 'cash').forEach(s => {
+      if (s.stakes) stakes.add(s.stakes);
+    });
+    return Array.from(stakes).sort((a, b) => {
+      const aVal = parseInt(a.match(/\d+/)?.[0] || 0);
+      const bVal = parseInt(b.match(/\d+/)?.[0] || 0);
+      return aVal - bVal;
+    });
+  }, [sessions]);
+
+  // Filter sessions based on selected filters
+  const filteredSessions = useMemo(() => {
+    return sessions.filter(session => {
+      // Stakes filter (only for cash games)
+      if (selectedStakes !== 'all' && session.type === 'cash') {
+        if (session.stakes !== selectedStakes) return false;
+      }
+
+      // Date range filter
+      if (startDate) {
+        const sessionDate = new Date(session.date);
+        const start = new Date(startDate);
+        if (sessionDate < start) return false;
+      }
+      if (endDate) {
+        const sessionDate = new Date(session.date);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+        if (sessionDate > end) return false;
+      }
+
+      // Day of week filter
+      if (selectedDays.length > 0) {
+        const sessionDate = new Date(session.date);
+        const dayIndex = sessionDate.getDay();
+        if (!selectedDays.includes(dayIndex)) return false;
+      }
+
+      return true;
+    });
+  }, [sessions, selectedStakes, startDate, endDate, selectedDays]);
+
+  // Toggle day selection
+  const toggleDay = (dayIndex) => {
+    setSelectedDays(prev =>
+      prev.includes(dayIndex)
+        ? prev.filter(d => d !== dayIndex)
+        : [...prev, dayIndex]
+    );
+  };
+
+  // Clear all filters
+  const clearFilters = () => {
+    setSelectedStakes('all');
+    setStartDate('');
+    setEndDate('');
+    setSelectedDays([]);
+  };
+
+  // Check if any filters are active
+  const hasActiveFilters = selectedStakes !== 'all' || startDate || endDate || selectedDays.length > 0;
 
   if (loading) {
     return (
@@ -25,12 +98,13 @@ export default function Stats() {
     );
   }
 
-  const cashStats = calculateCashStats(sessions);
-  const tournamentStats = calculateTournamentStats(sessions);
-  const statsByStakes = calculateStatsByStakes(sessions);
-  const cashProfitData = prepareProfitChartData(sessions, 'cash');
-  const tournamentProfitData = prepareProfitChartData(sessions, 'tournament');
-  const allProfitData = prepareProfitChartData(sessions, 'all');
+  // Calculate stats from filtered sessions
+  const cashStats = calculateCashStats(filteredSessions);
+  const tournamentStats = calculateTournamentStats(filteredSessions);
+  const statsByStakes = calculateStatsByStakes(filteredSessions);
+  const cashProfitData = prepareProfitChartData(filteredSessions, 'cash');
+  const tournamentProfitData = prepareProfitChartData(filteredSessions, 'tournament');
+  const allProfitData = prepareProfitChartData(filteredSessions, 'all');
 
   const tabs = [
     { id: 'cash', label: 'Cash Games' },
@@ -41,6 +115,104 @@ export default function Stats() {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-100">Statistics</h2>
+
+      {/* Filters */}
+      <div className="card">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold text-gray-100">Filters</h3>
+          {hasActiveFilters && (
+            <button
+              onClick={clearFilters}
+              className="text-sm text-primary-400 hover:text-primary-300"
+            >
+              Clear All
+            </button>
+          )}
+        </div>
+
+        <div className="space-y-4">
+          {/* Stakes Filter */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Stakes</label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedStakes('all')}
+                className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                  selectedStakes === 'all'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                All
+              </button>
+              {availableStakes.map(stakes => (
+                <button
+                  key={stakes}
+                  onClick={() => setSelectedStakes(stakes)}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                    selectedStakes === stakes
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {stakes}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Date Range Filter */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Date Range</label>
+            <div className="flex flex-wrap gap-3 items-center">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="input px-3 py-1.5 text-sm rounded-lg"
+                placeholder="Start date"
+              />
+              <span className="text-gray-500">to</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="input px-3 py-1.5 text-sm rounded-lg"
+              />
+            </div>
+          </div>
+
+          {/* Day of Week Filter */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Day of Week</label>
+            <div className="flex flex-wrap gap-2">
+              {DAYS_OF_WEEK.map((day, index) => (
+                <button
+                  key={day}
+                  onClick={() => toggleDay(index)}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                    selectedDays.includes(index)
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {day}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Filter Summary */}
+        {hasActiveFilters && (
+          <div className="mt-4 pt-4 border-t border-gray-700">
+            <p className="text-sm text-gray-400">
+              Showing <span className="text-gray-100 font-medium">{filteredSessions.length}</span> of{' '}
+              <span className="text-gray-100 font-medium">{sessions.length}</span> sessions
+            </p>
+          </div>
+        )}
+      </div>
 
       {/* Tabs */}
       <div className="flex gap-2 overflow-x-auto pb-2">
@@ -64,7 +236,7 @@ export default function Stats() {
         <div className="space-y-6">
           {cashStats.sessionsPlayed === 0 ? (
             <div className="card text-center py-8">
-              <p className="text-gray-500">No cash game sessions recorded yet.</p>
+              <p className="text-gray-500">No cash game sessions {hasActiveFilters ? 'match your filters' : 'recorded yet'}.</p>
             </div>
           ) : (
             <>
@@ -87,7 +259,7 @@ export default function Stats() {
                       {cashStats.bbPer100.toFixed(2)}
                     </p>
                     <p className="text-sm text-gray-400">
-                      {cashStats.totalHands.toLocaleString()} hands
+                      across {cashStats.sessionsPlayed} sessions
                     </p>
                   </div>
                   <div>
@@ -100,8 +272,8 @@ export default function Stats() {
                     </p>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-400">Volume</p>
-                    <p className="text-2xl font-bold">{cashStats.sessionsPlayed}</p>
+                    <p className="text-sm text-gray-400">Total Hands</p>
+                    <p className="text-2xl font-bold">{cashStats.totalHands.toLocaleString()}</p>
                     <p className="text-sm text-gray-400">
                       {formatDuration(cashStats.totalMinutes)}
                     </p>
@@ -150,7 +322,7 @@ export default function Stats() {
                     <thead>
                       <tr className="text-left text-gray-400 border-b border-gray-600">
                         <th className="pb-2">Stakes</th>
-                        <th className="pb-2">Sessions</th>
+                        <th className="pb-2">Hands</th>
                         <th className="pb-2">Profit ($)</th>
                         <th className="pb-2">Profit (BB)</th>
                         <th className="pb-2">BB/100</th>
@@ -161,7 +333,7 @@ export default function Stats() {
                       {statsByStakes.map(stake => (
                         <tr key={stake.stakes} className="border-b border-gray-700">
                           <td className="py-2 font-medium">{stake.stakes}</td>
-                          <td className="py-2">{stake.sessionsCount}</td>
+                          <td className="py-2">{stake.totalHands.toLocaleString()}</td>
                           <td className={`py-2 ${stake.totalDollars >= 0 ? 'profit-text' : 'loss-text'}`}>
                             {formatCurrency(stake.totalDollars)}
                           </td>
@@ -196,7 +368,7 @@ export default function Stats() {
         <div className="space-y-6">
           {tournamentStats.tournamentsPlayed === 0 ? (
             <div className="card text-center py-8">
-              <p className="text-gray-500">No tournament sessions recorded yet.</p>
+              <p className="text-gray-500">No tournament sessions {hasActiveFilters ? 'match your filters' : 'recorded yet'}.</p>
             </div>
           ) : (
             <>
@@ -260,16 +432,16 @@ export default function Stats() {
       {/* Overview Tab */}
       {activeTab === 'overview' && (
         <div className="space-y-6">
-          {sessions.length === 0 ? (
+          {filteredSessions.length === 0 ? (
             <div className="card text-center py-8">
-              <p className="text-gray-500">No sessions recorded yet.</p>
+              <p className="text-gray-500">No sessions {hasActiveFilters ? 'match your filters' : 'recorded yet'}.</p>
             </div>
           ) : (
             <>
               {/* Combined Stats */}
               <div className="card">
                 <h3 className="text-lg font-semibold mb-4 text-gray-100">Overall Summary</h3>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div>
                     <p className="text-sm text-gray-400">Total Profit</p>
                     <p className={`text-2xl font-bold ${
@@ -282,13 +454,18 @@ export default function Stats() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Total Sessions</p>
-                    <p className="text-2xl font-bold">{sessions.length}</p>
+                    <p className="text-2xl font-bold">{filteredSessions.length}</p>
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-400">Total Hands</p>
+                    <p className="text-2xl font-bold">{cashStats.totalHands.toLocaleString()}</p>
+                    <p className="text-sm text-gray-400">cash games</p>
                   </div>
                   <div>
                     <p className="text-sm text-gray-400">Total Time</p>
                     <p className="text-2xl font-bold">
                       {formatDuration(
-                        sessions.reduce((sum, s) => sum + (s.duration || 0), 0)
+                        filteredSessions.reduce((sum, s) => sum + (s.duration || 0), 0)
                       )}
                     </p>
                   </div>
@@ -309,6 +486,10 @@ export default function Stats() {
                     <div className="flex justify-between">
                       <span className="text-gray-500">Sessions</span>
                       <span className="font-medium">{cashStats.sessionsPlayed}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Hands</span>
+                      <span className="font-medium">{cashStats.totalHands.toLocaleString()}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-500">Profit</span>
