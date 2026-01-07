@@ -2,7 +2,10 @@ import { useState, useEffect, createContext, useContext } from 'react';
 import {
   onAuthStateChanged,
   signInWithPopup,
-  signOut as firebaseSignOut
+  signOut as firebaseSignOut,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { auth, googleProvider } from '../firebase/config';
 
@@ -30,6 +33,33 @@ export function AuthProvider({ children }) {
     }
   };
 
+  const signUpWithEmail = async (email, password) => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Error signing up with email:', error);
+      throw error;
+    }
+  };
+
+  const signInWithEmail = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Error signing in with email:', error);
+      throw error;
+    }
+  };
+
+  const resetPassword = async (email) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      throw error;
+    }
+  };
+
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
@@ -43,6 +73,9 @@ export function AuthProvider({ children }) {
     user,
     loading,
     signInWithGoogle,
+    signUpWithEmail,
+    signInWithEmail,
+    resetPassword,
     signOut
   };
 

@@ -2,9 +2,16 @@ import { useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
-  const { signInWithGoogle } = useAuth();
+  const { signInWithGoogle, signUpWithEmail, signInWithEmail, resetPassword } = useAuth();
   const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // Form state
+  const [mode, setMode] = useState('login'); // 'login', 'signup', 'reset'
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleGoogleSignIn = async () => {
     setLoading(true);
@@ -13,11 +20,61 @@ export default function Login() {
       await signInWithGoogle();
     } catch (err) {
       console.error('Sign in error:', err);
-      // Show the actual error message for debugging
       setError(err.message || 'Failed to sign in. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleEmailSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      if (mode === 'signup') {
+        if (password !== confirmPassword) {
+          throw new Error('Passwords do not match');
+        }
+        if (password.length < 6) {
+          throw new Error('Password must be at least 6 characters');
+        }
+        await signUpWithEmail(email, password);
+      } else if (mode === 'login') {
+        await signInWithEmail(email, password);
+      } else if (mode === 'reset') {
+        await resetPassword(email);
+        setSuccess('Password reset email sent! Check your inbox.');
+        setEmail('');
+      }
+    } catch (err) {
+      console.error('Auth error:', err);
+      // Make error messages more user-friendly
+      let message = err.message;
+      if (err.code === 'auth/email-already-in-use') {
+        message = 'An account with this email already exists';
+      } else if (err.code === 'auth/invalid-email') {
+        message = 'Please enter a valid email address';
+      } else if (err.code === 'auth/weak-password') {
+        message = 'Password must be at least 6 characters';
+      } else if (err.code === 'auth/user-not-found') {
+        message = 'No account found with this email';
+      } else if (err.code === 'auth/wrong-password') {
+        message = 'Incorrect password';
+      } else if (err.code === 'auth/invalid-credential') {
+        message = 'Invalid email or password';
+      }
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const switchMode = (newMode) => {
+    setMode(newMode);
+    setError(null);
+    setSuccess(null);
   };
 
   return (
@@ -34,7 +91,9 @@ export default function Login() {
 
         <div className="card">
           <h2 className="text-xl font-semibold text-center mb-6 text-gray-100">
-            Sign In to Continue
+            {mode === 'login' && 'Sign In'}
+            {mode === 'signup' && 'Create Account'}
+            {mode === 'reset' && 'Reset Password'}
           </h2>
 
           {error && (
@@ -43,6 +102,125 @@ export default function Login() {
             </div>
           )}
 
+          {success && (
+            <div className="bg-green-900/50 text-green-400 p-3 rounded-lg mb-4 text-sm">
+              {success}
+            </div>
+          )}
+
+          {/* Email/Password Form */}
+          <form onSubmit={handleEmailSubmit} className="space-y-4 mb-4">
+            <div>
+              <label className="block text-sm text-gray-400 mb-1">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input w-full"
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+
+            {mode !== 'reset' && (
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Password</label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input w-full"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            )}
+
+            {mode === 'signup' && (
+              <div>
+                <label className="block text-sm text-gray-400 mb-1">Confirm Password</label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="input w-full"
+                  placeholder="••••••••"
+                  required
+                />
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="btn-primary w-full"
+            >
+              {loading ? 'Please wait...' : (
+                mode === 'login' ? 'Sign In' :
+                mode === 'signup' ? 'Create Account' :
+                'Send Reset Email'
+              )}
+            </button>
+          </form>
+
+          {/* Mode Switchers */}
+          <div className="text-center text-sm space-y-2">
+            {mode === 'login' && (
+              <>
+                <p className="text-gray-400">
+                  Don't have an account?{' '}
+                  <button
+                    onClick={() => switchMode('signup')}
+                    className="text-primary-400 hover:text-primary-300"
+                  >
+                    Sign up
+                  </button>
+                </p>
+                <p>
+                  <button
+                    onClick={() => switchMode('reset')}
+                    className="text-gray-500 hover:text-gray-400"
+                  >
+                    Forgot password?
+                  </button>
+                </p>
+              </>
+            )}
+            {mode === 'signup' && (
+              <p className="text-gray-400">
+                Already have an account?{' '}
+                <button
+                  onClick={() => switchMode('login')}
+                  className="text-primary-400 hover:text-primary-300"
+                >
+                  Sign in
+                </button>
+              </p>
+            )}
+            {mode === 'reset' && (
+              <p className="text-gray-400">
+                Remember your password?{' '}
+                <button
+                  onClick={() => switchMode('login')}
+                  className="text-primary-400 hover:text-primary-300"
+                >
+                  Sign in
+                </button>
+              </p>
+            )}
+          </div>
+
+          {/* Divider */}
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center">
+              <div className="w-full border-t border-gray-700"></div>
+            </div>
+            <div className="relative flex justify-center text-sm">
+              <span className="px-2 bg-gray-800 text-gray-500">or</span>
+            </div>
+          </div>
+
+          {/* Google Sign In */}
           <button
             onClick={handleGoogleSignIn}
             disabled={loading}
@@ -66,7 +244,7 @@ export default function Login() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
               />
             </svg>
-            {loading ? 'Signing in...' : 'Continue with Google'}
+            Continue with Google
           </button>
 
           <p className="text-xs text-gray-500 text-center mt-4">
