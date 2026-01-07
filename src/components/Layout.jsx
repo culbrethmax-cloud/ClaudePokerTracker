@@ -17,7 +17,7 @@ export default function Layout({ children }) {
       {/* Top Header */}
       <header className="bg-gray-800 shadow-lg">
         <div className="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-primary-400">Poker Tracker</h1>
+          <h1 className="text-xl font-bold text-primary-400">MaxVariance</h1>
           {user && (
             <div className="flex items-center gap-3">
               <span className="text-sm text-gray-400 hidden sm:inline">

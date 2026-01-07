@@ -1,6 +1,6 @@
 {
-  "name": "Poker Tracker",
-  "short_name": "Poker",
+  "name": "MaxVariance Poker Tracker",
+  "short_name": "MaxVariance",
   "description": "Track your poker sessions across all devices",
   "start_url": "/",
   "display": "standalone",
