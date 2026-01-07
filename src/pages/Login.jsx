@@ -13,7 +13,8 @@ export default function Login() {
       await signInWithGoogle();
     } catch (err) {
       console.error('Sign in error:', err);
-      setError('Failed to sign in. Please try again.');
+      // Show the actual error message for debugging
+      setError(err.message || 'Failed to sign in. Please try again.');
     } finally {
       setLoading(false);
     }
