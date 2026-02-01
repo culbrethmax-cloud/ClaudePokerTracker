@@ -17,6 +17,15 @@ dist-ssr
 .env.local
 .env.*.local
 
+# API server
+api/node_modules
+api/.env
+api/logs
+api/backups
+
+# Service account keys (never commit)
+*service-account*.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
