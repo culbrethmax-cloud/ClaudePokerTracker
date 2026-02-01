@@ -11,6 +11,7 @@ export default function SessionForm({ onSubmit, initialData = null, isEditing = 
     // Common fields
     date: initialData?.date || new Date().toISOString().split('T')[0],
     duration: initialData?.duration || '',
+    startTime: initialData?.startTime || '',
     location: initialData?.location || '',
     gameType: initialData?.gameType || 'NLHE',
     notes: initialData?.notes || '',
@@ -70,6 +71,10 @@ export default function SessionForm({ onSubmit, initialData = null, isEditing = 
       notes: formData.notes.trim()
     };
 
+    if (formData.startTime) {
+      sessionData.startTime = formData.startTime;
+    }
+
     if (sessionType === 'cash') {
       sessionData.stakes = formData.stakes;
       sessionData.profitBB = parseFloat(formData.profitBB) || 0;
@@ -120,6 +125,18 @@ export default function SessionForm({ onSubmit, initialData = null, isEditing = 
           onChange={handleChange}
           className="input"
           required
+        />
+      </div>
+
+      {/* Start Time (optional) */}
+      <div>
+        <label className="label">Start Time (optional)</label>
+        <input
+          type="time"
+          name="startTime"
+          value={formData.startTime}
+          onChange={handleChange}
+          className="input"
         />
       </div>
 
