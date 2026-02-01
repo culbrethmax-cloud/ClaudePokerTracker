@@ -1,16 +1,36 @@
-# React + Vite
+# MaxVariance Poker Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A personal poker session tracker for tracking cash games and tournaments across all devices.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **Cash game tracking:** Input profit in BBs, auto-calculates dollar profit based on stakes
+- **Tournament tracking:** Buy-in, cash-out, ROI calculation
+- **Statistics:** BB/100, hourly rate, profit over time charts, results by stakes
+- **Stat filtering:** Filter by stakes level, date range, or day of week
+- **Import:** Paste data from Google Sheets to bulk import sessions
+- **Cross-device sync:** Firebase real-time database syncs across all devices
+- **Authentication:** Email/password or Google sign-in
+- **Dark mode:** Claude-inspired dark theme
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+React, Vite, Tailwind CSS, Firebase (Auth, Firestore, Hosting), Recharts
 
-## Expanding the ESLint configuration
+## Quick Start
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+```bash
+# Install dependencies
+npm install
+
+# Copy environment template and fill in Firebase credentials
+cp .env.example .env
+
+# Start dev server
+npm run dev
+
+# Build and deploy
+npm run build && firebase deploy --only hosting
+```
+
+See [SETUP.md](./SETUP.md) for detailed first-time setup instructions.
