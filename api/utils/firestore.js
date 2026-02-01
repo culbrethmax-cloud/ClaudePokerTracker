@@ -30,6 +30,44 @@ function getDb() {
 }
 
 /**
+ * Convert a Firestore Timestamp or Date to a "YYYY-MM-DD" string
+ * using local time (matches what the user sees in the frontend).
+ * Returns strings as-is.
+ */
+function normalizeDate(value) {
+  if (typeof value === 'string') return value;
+  if (value && typeof value.toDate === 'function') {
+    // Firestore Timestamp
+    value = value.toDate();
+  }
+  if (value instanceof Date) {
+    const year = value.getFullYear();
+    const month = String(value.getMonth() + 1).padStart(2, '0');
+    const day = String(value.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  return String(value);
+}
+
+/**
+ * Normalize a session document so all fields are plain JSON-safe values.
+ * Converts Firestore Timestamps to strings.
+ */
+function normalizeSession(session) {
+  const normalized = { ...session };
+  if (normalized.date != null) {
+    normalized.date = normalizeDate(normalized.date);
+  }
+  if (normalized.createdAt && typeof normalized.createdAt.toDate === 'function') {
+    normalized.createdAt = normalized.createdAt.toDate().toISOString();
+  }
+  if (normalized.updatedAt && typeof normalized.updatedAt.toDate === 'function') {
+    normalized.updatedAt = normalized.updatedAt.toDate().toISOString();
+  }
+  return normalized;
+}
+
+/**
  * Fetch all sessions for the configured user.
  * Returns cached data if available and fresh.
  */
@@ -46,7 +84,7 @@ async function getAllSessions() {
   const sessionsRef = db.collection('users').doc(userId).collection('sessions');
   const snapshot = await sessionsRef.orderBy('date', 'desc').get();
 
-  const sessions = snapshot.docs.map(doc => ({
+  const sessions = snapshot.docs.map(doc => normalizeSession({
     id: doc.id,
     ...doc.data()
   }));
