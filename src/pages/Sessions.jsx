@@ -123,7 +123,7 @@ export default function Sessions() {
                   </div>
 
                   <p className="text-sm text-gray-400">
-                    {format(new Date(session.date), 'EEEE, MMM d, yyyy')}
+                    {format(new Date(session.date + 'T00:00:00'), 'EEEE, MMM d, yyyy')}
                     {session.location && ` • ${session.location}`}
                   </p>
 

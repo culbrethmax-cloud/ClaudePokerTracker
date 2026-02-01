@@ -178,7 +178,7 @@ export default function Dashboard() {
                       </span>
                     </p>
                     <p className="text-sm text-gray-400">
-                      {format(new Date(session.date), 'MMM d, yyyy')}
+                      {format(new Date(session.date + 'T00:00:00'), 'MMM d, yyyy')}
                       {session.location && ` • ${session.location}`}
                     </p>
                   </div>

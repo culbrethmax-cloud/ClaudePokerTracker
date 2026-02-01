@@ -48,20 +48,20 @@ export default function Stats() {
 
       // Date range filter
       if (startDate) {
-        const sessionDate = new Date(session.date);
-        const start = new Date(startDate);
+        const sessionDate = new Date(session.date + 'T00:00:00');
+        const start = new Date(startDate + 'T00:00:00');
         if (sessionDate < start) return false;
       }
       if (endDate) {
-        const sessionDate = new Date(session.date);
-        const end = new Date(endDate);
+        const sessionDate = new Date(session.date + 'T00:00:00');
+        const end = new Date(endDate + 'T00:00:00');
         end.setHours(23, 59, 59, 999);
         if (sessionDate > end) return false;
       }
 
       // Day of week filter
       if (selectedDays.length > 0) {
-        const sessionDate = new Date(session.date);
+        const sessionDate = new Date(session.date + 'T00:00:00');
         const dayIndex = sessionDate.getDay();
         if (!selectedDays.includes(dayIndex)) return false;
       }

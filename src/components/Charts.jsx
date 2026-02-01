@@ -26,7 +26,7 @@ export function ProfitChart({ data, showBB = false }) {
 
   const formattedData = data.map(d => ({
     ...d,
-    dateFormatted: format(new Date(d.date), 'MMM d'),
+    dateFormatted: format(new Date(d.date + 'T00:00:00'), 'MMM d'),
     profit: showBB ? d.profitBB : d.profitDollars
   }));
 

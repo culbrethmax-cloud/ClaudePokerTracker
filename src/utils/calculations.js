@@ -220,7 +220,7 @@ export function prepareProfitChartData(sessions, type = 'all') {
 
   // Sort by date
   const sorted = [...filteredSessions].sort((a, b) =>
-    new Date(a.date) - new Date(b.date)
+    new Date(a.date + 'T00:00:00') - new Date(b.date + 'T00:00:00')
   );
 
   let cumulativeProfitDollars = 0;
