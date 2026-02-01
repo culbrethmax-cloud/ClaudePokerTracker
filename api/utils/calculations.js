@@ -355,10 +355,15 @@ function calculateTrends(sessions, windowSize) {
   return dataPoints;
 }
 
-// --- Strip PII fields from sessions for API responses ---
+// --- Strip internal fields from sessions for API responses ---
 
 function sanitizeSession(session) {
   const { notes, createdAt, updatedAt, ...safe } = session;
+  return safe;
+}
+
+function sanitizeSessionWithNotes(session) {
+  const { createdAt, updatedAt, ...safe } = session;
   return safe;
 }
 
@@ -369,5 +374,6 @@ module.exports = {
   calculateByGameType,
   calculateTrends,
   sanitizeSession,
+  sanitizeSessionWithNotes,
   round
 };

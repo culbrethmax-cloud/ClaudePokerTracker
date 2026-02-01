@@ -7,7 +7,8 @@ const {
   calculateByDayOfWeek,
   calculateByGameType,
   calculateTrends,
-  sanitizeSession
+  sanitizeSession,
+  sanitizeSessionWithNotes
 } = require('../utils/calculations');
 
 /**
@@ -54,7 +55,7 @@ router.get('/sessions', async (req, res, next) => {
     const page = sorted.slice(offset, offset + limit);
 
     res.json({
-      data: page.map(sanitizeSession),
+      data: page.map(sanitizeSessionWithNotes),
       pagination: {
         total: filtered.length,
         limit,
