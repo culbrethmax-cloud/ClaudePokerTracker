@@ -132,8 +132,35 @@ npm run dev
 npm run build && firebase deploy --only hosting
 ```
 
-Firebase config is in `firebase.json` (public directory: `dist`).
-Environment variables are in `.env` (not committed - see `.env.example`).
+### Deployment Prerequisites
+
+1. **Firebase CLI:** `sudo npm install -g firebase-tools`
+2. **Firebase login:** `firebase login`
+3. **Firebase project set:** `firebase use <project-id>` (creates `.firebaserc`)
+4. **`.env` file:** Must exist with Firebase credentials (not committed to git). Copy from `.env.example` and fill in values from Firebase Console → Project Settings → Your apps.
+
+### Deployment Files
+
+- `firebase.json` — Hosting config (public directory: `dist`, SPA rewrites). Committed to repo.
+- `.firebaserc` — Maps to Firebase project ID. Created locally by `firebase use`. Not committed.
+- `.env` — Firebase API keys and project config. Not committed (in `.gitignore`).
+
+### First-Time Deploy on a New Machine
+
+```bash
+sudo npm install -g firebase-tools
+firebase login
+firebase use <your-project-id>
+cp .env.example .env   # Then fill in your Firebase credentials
+npm install
+npm run build && firebase deploy --only hosting
+```
+
+### Routine Deploy After Code Changes
+
+```bash
+npm run build && firebase deploy --only hosting
+```
 
 ## Common Tasks
 
