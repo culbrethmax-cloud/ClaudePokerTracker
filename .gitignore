@@ -36,3 +36,4 @@ api/backups
 *.njsproj
 *.sln
 *.sw?
+api/ecosystem.config.cjs
