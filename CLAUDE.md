@@ -6,6 +6,8 @@ A personal poker session tracker web app (PWA) for tracking cash games and tourn
 
 **Live site:** Hosted on Firebase Hosting (custom domain: maxvariance.net)
 
+**Primary branch:** `main` — all development and deployments should use this branch.
+
 ## Tech Stack
 
 - **Frontend:** React 18 + Vite (JavaScript, not TypeScript)
