@@ -78,7 +78,7 @@ export function formatDuration(minutes) {
 export function getStakesOptions() {
   return [
     'NL2', 'NL5', 'NL10', 'NL20', 'NL25', 'NL50', 'NL100', 'NL200', 'NL500', 'NL1000',
-    'PLO5', 'PLO10', 'PLO25', 'PLO50', 'PLO100', 'PLO200', 'PLO500'
+    'PLO5', 'PLO10', 'PLO20', 'PLO25', 'PLO50', 'PLO100', 'PLO200', 'PLO500'
   ];
 }
 
