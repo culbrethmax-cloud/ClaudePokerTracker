@@ -258,6 +258,56 @@ Exports all sessions to `api/backups/sessions-backup-TIMESTAMP.json`.
 - 5-minute cache reduces Firestore reads
 - Location field included in responses; notes only in `/api/sessions`
 
+## Session Safety: Backups & Rollback
+
+**At the start of every working session, always do both of these before making any changes:**
+
+1. **Tag the current code state:**
+   ```bash
+   git tag -a v<description>-<date> -m "Before <what you're about to work on>"
+   # Example: git tag -a v1.1-pre-dashboard-2026-02-11 -m "Before dashboard redesign"
+   ```
+
+2. **Back up Firestore data:**
+   ```bash
+   cd api && node scripts/backup.js
+   ```
+   This exports all sessions to `api/backups/sessions-backup-TIMESTAMP.json`.
+
+**To roll back code** to a previous tag:
+```bash
+git tag -l           # List all tags
+git checkout <tag>   # Restore code to that state
+npm run build && firebase deploy --only hosting   # Redeploy the old version
+git checkout main    # Return to main branch tip when done inspecting
+```
+
+**To restore Firestore data** from a backup: manually re-import the JSON file from `api/backups/`.
+
+**Do not use branches.** All work happens on `main`. Tags are the safety net.
+
+**At the end of every working session**, commit changes and push to GitHub as a remote backup:
+```bash
+git add <files> && git commit -m "message"
+git push origin main
+git push --tags   # Push any new tags too
+```
+GitHub is only used as an off-machine backup. Firebase does not pull from it — deploys go directly from the local machine.
+
+## Documentation Instructions
+
+This project uses a two-tier documentation system:
+
+1. **CLAUDE.md** (this file) — High-level project info: architecture, conventions, feature list, and how-tos. Kept concise. When a topic has deeper context, reference the session log by line number (e.g., "See session-log.md line 42 for details").
+
+2. **session-log.md** — Detailed, chronological log of every working session. Each entry includes what was done, why, what files were changed, and any decisions or gotchas. Updated at the end of every working session.
+
+**Workflow:**
+- CLAUDE.md is always loaded in context. Keep it scannable.
+- session-log.md is NOT loaded by default. Read specific lines only when deeper context is needed.
+- When adding a new feature or making a significant change, add a high-level note to CLAUDE.md and reference the session log line number for details.
+- Session log entries should be detailed enough that someone could understand the full scope of work without reading the code diff.
+
 ## Common Tasks
 
 **Add a new page:**
