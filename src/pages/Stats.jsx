@@ -24,6 +24,7 @@ export default function Stats() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [selectedDays, setSelectedDays] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState('all');
 
   // Get unique stakes from sessions
   const availableStakes = useMemo(() => {
@@ -38,12 +39,26 @@ export default function Stats() {
     });
   }, [sessions]);
 
+  // Get unique locations from all sessions
+  const availableLocations = useMemo(() => {
+    const locations = new Set();
+    sessions.forEach(s => {
+      if (s.location) locations.add(s.location);
+    });
+    return Array.from(locations).sort();
+  }, [sessions]);
+
   // Filter sessions based on selected filters
   const filteredSessions = useMemo(() => {
     return sessions.filter(session => {
       // Stakes filter (only for cash games)
       if (selectedStakes !== 'all' && session.type === 'cash') {
         if (session.stakes !== selectedStakes) return false;
+      }
+
+      // Location filter
+      if (selectedLocation !== 'all') {
+        if (session.location !== selectedLocation) return false;
       }
 
       // Date range filter
@@ -68,7 +83,7 @@ export default function Stats() {
 
       return true;
     });
-  }, [sessions, selectedStakes, startDate, endDate, selectedDays]);
+  }, [sessions, selectedStakes, selectedLocation, startDate, endDate, selectedDays]);
 
   // Toggle day selection
   const toggleDay = (dayIndex) => {
@@ -82,13 +97,14 @@ export default function Stats() {
   // Clear all filters
   const clearFilters = () => {
     setSelectedStakes('all');
+    setSelectedLocation('all');
     setStartDate('');
     setEndDate('');
     setSelectedDays([]);
   };
 
   // Check if any filters are active
-  const hasActiveFilters = selectedStakes !== 'all' || startDate || endDate || selectedDays.length > 0;
+  const hasActiveFilters = selectedStakes !== 'all' || selectedLocation !== 'all' || startDate || endDate || selectedDays.length > 0;
 
   if (loading) {
     return (
@@ -156,6 +172,36 @@ export default function Stats() {
                   }`}
                 >
                   {stakes}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Location Filter */}
+          <div>
+            <label className="block text-sm text-gray-400 mb-2">Location</label>
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedLocation('all')}
+                className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                  selectedLocation === 'all'
+                    ? 'bg-primary-600 text-white'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                }`}
+              >
+                All
+              </button>
+              {availableLocations.map(location => (
+                <button
+                  key={location}
+                  onClick={() => setSelectedLocation(location)}
+                  className={`px-3 py-1.5 text-sm rounded-lg transition-colors ${
+                    selectedLocation === location
+                      ? 'bg-primary-600 text-white'
+                      : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  }`}
+                >
+                  {location}
                 </button>
               ))}
             </div>
