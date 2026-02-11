@@ -129,10 +129,12 @@ The app uses a **dark mode theme** similar to Claude's UI:
 ## Stats Filtering
 
 The Stats page (`Stats.jsx`) has filters that apply to all stats/charts:
-- **Stakes filter:** Buttons for each stake level found in sessions
+- **Stakes filter:** Buttons for each stake level found in cash sessions
+- **Location filter:** Buttons for each unique location across all sessions (cash + tournaments). See session-log.md Session 3 for details.
 - **Date range:** Start/end date pickers
 - **Day of week:** Toggle buttons (Sun-Sat)
 - Filters use `useMemo` to derive `filteredSessions` from raw sessions
+- All filters AND together; "Clear All" resets everything
 
 ## Import Feature
 
