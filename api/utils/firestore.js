@@ -118,6 +118,69 @@ function filterSessions(sessions, filters) {
   return result;
 }
 
+/**
+ * Add a new session document to Firestore.
+ * Returns the new document ID.
+ */
+async function addSession(sessionData) {
+  const userId = process.env.FIREBASE_USER_ID;
+  if (!userId) {
+    throw new Error('FIREBASE_USER_ID environment variable is required');
+  }
+
+  const db = getDb();
+  const sessionsRef = db.collection('users').doc(userId).collection('sessions');
+  const docRef = await sessionsRef.add(sessionData);
+  cache.clear();
+  return docRef.id;
+}
+
+/**
+ * Update an existing session document in Firestore.
+ * Throws if the document does not exist.
+ */
+async function updateSession(sessionId, sessionData) {
+  const userId = process.env.FIREBASE_USER_ID;
+  if (!userId) {
+    throw new Error('FIREBASE_USER_ID environment variable is required');
+  }
+
+  const db = getDb();
+  const docRef = db.collection('users').doc(userId).collection('sessions').doc(sessionId);
+  const doc = await docRef.get();
+  if (!doc.exists) {
+    const err = new Error('Session not found');
+    err.status = 404;
+    throw err;
+  }
+
+  await docRef.update(sessionData);
+  cache.clear();
+}
+
+/**
+ * Delete a session document from Firestore.
+ * Throws if the document does not exist.
+ */
+async function deleteSession(sessionId) {
+  const userId = process.env.FIREBASE_USER_ID;
+  if (!userId) {
+    throw new Error('FIREBASE_USER_ID environment variable is required');
+  }
+
+  const db = getDb();
+  const docRef = db.collection('users').doc(userId).collection('sessions').doc(sessionId);
+  const doc = await docRef.get();
+  if (!doc.exists) {
+    const err = new Error('Session not found');
+    err.status = 404;
+    throw err;
+  }
+
+  await docRef.delete();
+  cache.clear();
+}
+
 function clearCache() {
   cache.clear();
 }
@@ -130,5 +193,8 @@ module.exports = {
   getAllSessions,
   filterSessions,
   clearCache,
-  getCacheAge
+  getCacheAge,
+  addSession,
+  updateSession,
+  deleteSession
 };

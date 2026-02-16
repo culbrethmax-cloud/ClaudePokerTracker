@@ -15,7 +15,7 @@ app.use(helmet());
 // CORS — allow local network access (Docker containers, etc.)
 app.use(cors({
   origin: process.env.CORS_ORIGIN || '*',
-  methods: ['GET'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Authorization', 'Content-Type']
 }));
 
@@ -53,6 +53,9 @@ app.use('/api', (req, res) => {
     availableEndpoints: [
       'GET /api/health',
       'GET /api/sessions',
+      'POST /api/sessions',
+      'PUT /api/sessions/:id',
+      'DELETE /api/sessions/:id',
       'GET /api/stats/summary',
       'GET /api/stats/by-duration',
       'GET /api/stats/by-game-type',

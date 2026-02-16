@@ -375,5 +375,6 @@ module.exports = {
   calculateTrends,
   sanitizeSession,
   sanitizeSessionWithNotes,
-  round
+  round,
+  getbbValueFromStakes
 };
