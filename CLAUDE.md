@@ -184,9 +184,9 @@ npm run build && firebase deploy --only hosting
 npm run build && firebase deploy --only hosting
 ```
 
-## Read-Only API Server
+## API Server
 
-A separate Express.js server providing read-only access to session data. Used by an AI poker coaching assistant (Clawd) running in Docker on the Mac Mini.
+A separate Express.js server providing access to session data. Used by an AI poker coaching assistant (Clawd) running in Docker on the Mac Mini. Supports full CRUD (create, read, update, delete) for sessions.
 
 ### Running the API Server
 
@@ -237,6 +237,9 @@ Rate limit: 60 requests per minute per IP.
 |--------|----------|-------------|
 | GET | `/api/health` | Server status (no auth required) |
 | GET | `/api/sessions` | Paginated sessions with notes (query: from, to, type, stakes, limit, offset) |
+| POST | `/api/sessions` | Create a new session (validates, auto-calculates profitDollars) |
+| PUT | `/api/sessions/:id` | Update an existing session by ID |
+| DELETE | `/api/sessions/:id` | Delete a session by ID |
 | GET | `/api/stats/summary` | Aggregate stats: profit, BB/100, hourly rate, win rate |
 | GET | `/api/stats/by-duration` | Sessions bucketed by duration |
 | GET | `/api/stats/by-game-type` | Breakdown by cash/tournament and stakes |
